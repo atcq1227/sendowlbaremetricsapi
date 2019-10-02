@@ -1,3 +1,7 @@
+package baremetrics;
+
+import java.util.ArrayList;
+
 public class Plan {
     String OID;
     String sourceID;
@@ -9,10 +13,5 @@ public class Plan {
     String trialDurationUnit;
     String created;
     boolean active;
-    int setupFees;
-    int LTV;
-    boolean isActive;
-    boolean isCancelled;
-    String currentMRR;
-    Plan currentPlans;
+    ArrayList<Amount> amounts;
 }

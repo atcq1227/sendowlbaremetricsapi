@@ -1,3 +1,5 @@
+package baremetrics;
+
 public class Customer {
     String OID;
     String sourceID;
