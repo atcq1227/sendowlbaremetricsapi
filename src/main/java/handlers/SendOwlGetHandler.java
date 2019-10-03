@@ -1,3 +1,5 @@
+package handlers;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpResponse;
@@ -8,9 +10,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.*;
 
-public class SendOwlRequestHandler {
+public class SendOwlGetHandler {
     final private String API_KEY = "9c4ee8343e814c4";
-    final private String API_SECRET = "6a90ab3cf8cd7f4a07e6";
+    final private String API_SECRET = "9c4ee8343e814c4";
 
     public JsonArray getJSONResponse() {
         try {
