@@ -24,4 +24,8 @@ public class Debugger {
     public static void logContext(Context context) {
         System.out.println("Identity: " + context.getIdentity().getIdentityId());
     }
+
+    public static void logNewSubscriptionActive() {
+        System.out.println("New subscription active");
+    }
 }

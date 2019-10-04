@@ -1,16 +1,18 @@
 package handlers.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import handlers.event.SubscriptionActive;
 import util.Debugger;
 
 import java.io.InputStream;
 
-public class SubscriptionActiveHandler extends LambdaHandler {
+public class SubscriptionActiveHandler implements RequestHandler<InputStream, String> {
     public String handleRequest(InputStream webHookRequest, Context context) {
-        System.out.println("New subscription active");
+        Debugger.logNewSubscriptionActive();
 
-        Debugger.logInputStream(webHookRequest);
+        new SubscriptionActive().handle(webHookRequest);
 
-        return "{statusCode: 200}";
+        return "New subscription active";
     }
 }
