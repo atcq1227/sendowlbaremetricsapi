@@ -3,17 +3,20 @@ package sendowl;
 import com.google.gson.JsonObject;
 import util.JsonUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Order {
-    private InputStream orderStream;
+    private String orderBody;
 
-    public Order(InputStream orderStream) {
-        this.orderStream = orderStream;
+    public Order(String orderBody) {
+        this.orderBody = orderBody;
     }
 
     public String getProductName() {
-        return JsonUtil.searchableBody(orderStream).get("order").getAsJsonObject()
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("cart").getAsJsonObject()
                 .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
                 .get("product").getAsJsonObject()
@@ -21,17 +24,17 @@ public class Order {
     }
 
     public String getBuyerName() {
-        return JsonUtil.searchableBody(orderStream).get("order").getAsJsonObject()
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("buyer_name").getAsString();
     }
 
     public String getBuyerEmail() {
-        return JsonUtil.searchableBody(orderStream).get("order").getAsJsonObject()
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("buyer_email").getAsString();
     }
 
     public String getCompletedCheckoutAt() {
-        return JsonUtil.searchableBody(orderStream).get("order").getAsJsonObject()
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("cart").getAsJsonObject()
                 .get("completed_checkout_at").getAsString();
     }

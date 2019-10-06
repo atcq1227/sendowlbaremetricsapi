@@ -4,8 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class JsonUtil {
     public static String testProductOrder = "{\"order\": {\n" +
@@ -87,7 +86,7 @@ public class JsonUtil {
             "    \"validity_statement\": \"This link may be used up to 3 times before 2016-02-04 10:59:25 UTC when it will expire.\"\n" +
             "}}";
 
-    public static JsonObject searchableBody(InputStream inputStream) {
-        return new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+    public static JsonObject searchableBody(String request) {
+        return new JsonParser().parse(request).getAsJsonObject();
     }
 }

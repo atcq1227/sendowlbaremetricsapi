@@ -1,5 +1,10 @@
 package baremetrics;
 
+import com.google.gson.Gson;
+
+import java.util.Date;
+import java.util.Random;
+
 public class Customer {
     private String OID;
     private String sourceID;
@@ -212,5 +217,23 @@ public class Customer {
         return this;
     }
 
+    public Customer withNewOID() {
+        Random rand = new Random(this.hashCode());
 
+        Integer OID = rand.nextInt();
+
+        return this.withOID(OID.toString());
+    }
+
+    public Customer createdNow() {
+        Long timestamp = new Date().getTime();
+
+        return this.withCreated(timestamp.toString());
+    }
+
+    public String getJson() {
+        Gson gson = new Gson();
+
+        return gson.toJson(this);
+    }
 }

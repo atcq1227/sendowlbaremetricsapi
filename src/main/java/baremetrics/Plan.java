@@ -1,6 +1,9 @@
 package baremetrics;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Plan {
     String OID;
@@ -14,6 +17,14 @@ public class Plan {
     String created;
     boolean active;
     ArrayList<Amount> amounts;
+
+    public Plan withNewOID() {
+        Random rand = new Random(this.hashCode());
+
+        Integer OID = rand.nextInt();
+
+        return this.withOID(OID.toString());
+    }
 
     public Plan withOID(String OID) {
         this.OID = OID;
@@ -167,5 +178,11 @@ public class Plan {
 
     public void setAmounts(ArrayList<Amount> amounts) {
         this.amounts = amounts;
+    }
+
+    public String getJson() {
+        Gson gson = new Gson();
+
+        return gson.toJson(this);
     }
 }

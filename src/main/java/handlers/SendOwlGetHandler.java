@@ -12,8 +12,8 @@ import util.APIConstants;
 import java.io.*;
 
 public class SendOwlGetHandler {
-    final private String API_KEY = "4ab76f6325e7eb2";
-    final private String API_SECRET = "6ca56c1843e7c63e9d35";
+    final private String API_KEY = "9c4ee8343e814c4";
+    final private String API_SECRET = "6a90ab3cf8cd7f4a07e6";
 
     public JsonArray getProductsJSON() {
         try {

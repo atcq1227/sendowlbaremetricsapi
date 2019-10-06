@@ -11,41 +11,41 @@ public class OrderTest {
 
     @Test
     public void testGetPlanName() {
-        Assert.assertEquals("My Product", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getProductName());
+        Assert.assertEquals("My Product", new Order(JsonUtil.testProductOrder).getProductName());
     }
 
     @Test
     public void testGetPlanNameNegative() {
-        Assert.assertNotEquals("", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getProductName());
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getProductName());
     }
 
     @Test
     public void testGetBuyerName() {
-        Assert.assertEquals("Mr Buyer", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getBuyerName());
+        Assert.assertEquals("Mr Buyer", new Order(JsonUtil.testProductOrder).getBuyerName());
     }
 
     @Test
     public void testGetBuyerNameNegative() {
-        Assert.assertNotEquals("", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getBuyerName());
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getBuyerName());
     }
 
     @Test
     public void testGetBuyerEmail() {
-        Assert.assertEquals("mrbuyer@gmail.com", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getBuyerEmail());
+        Assert.assertEquals("mrbuyer@gmail.com", new Order(JsonUtil.testProductOrder).getBuyerEmail());
     }
 
     @Test
     public void testGetBuyerEmailNegative() {
-        Assert.assertNotEquals("", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getBuyerEmail());
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getBuyerEmail());
     }
 
     @Test
     public void testGetCompletedCheckoutAt() {
-        Assert.assertEquals("2016-01-05T10:59:24Z", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getCompletedCheckoutAt());
+        Assert.assertEquals("2016-01-05T10:59:24Z", new Order(JsonUtil.testProductOrder).getCompletedCheckoutAt());
     }
 
     @Test
     public void testGetCompletedCheckoutAtNegative() {
-        Assert.assertNotEquals("", new Order(new ByteArrayInputStream(JsonUtil.testProductOrder.getBytes())).getCompletedCheckoutAt());
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getCompletedCheckoutAt());
     }
 }

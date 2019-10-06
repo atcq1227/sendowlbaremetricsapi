@@ -6,9 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sendowlbaremetricsapi" />
+        <module name="sendowl-baremetrics-api" />
         <module name="sendowlBaremetricsAPI" />
+        <module name="sendowlbaremetricsapi" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="sendowlBaremetricsAPI" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
