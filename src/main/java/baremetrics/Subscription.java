@@ -1,5 +1,8 @@
 package baremetrics;
 
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.Oid;
+
 import java.util.Date;
 import java.util.Random;
 
@@ -19,7 +22,9 @@ public class Subscription {
     public Subscription withNewOID() {
         Random rand = new Random(this.hashCode());
 
-        Integer OID = rand.nextInt();
+        Integer OID = Math.abs(rand.nextInt());
+
+        System.out.println("New subscription OID: " + OID);
 
         return this.withOID(OID.toString());
     }
@@ -52,5 +57,93 @@ public class Subscription {
         this.plan = plan;
 
         return this;
+    }
+
+    public String getOID() {
+        return OID;
+    }
+
+    public void setOID(String OID) {
+        this.OID = OID;
+    }
+
+    public String getSourceID() {
+        return sourceID;
+    }
+
+    public void setSourceID(String sourceID) {
+        this.sourceID = sourceID;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getCancelledAt() {
+        return cancelledAt;
+    }
+
+    public void setCancelledAt(String cancelledAt) {
+        this.cancelledAt = cancelledAt;
+    }
+
+    public String getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(String startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public Plan getPlan() {
+        return plan;
+    }
+
+    public void setPlan(Plan plan) {
+        this.plan = plan;
     }
 }

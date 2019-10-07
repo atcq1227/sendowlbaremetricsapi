@@ -29,10 +29,10 @@ public class SubscriptionActive {
                 .withName(order.getBuyerName());
 
         Subscription subscription = new Subscription()
-                .withNewOID()
                 .startedNow()
                 .withCustomer(customer)
-                .withPlan(plan);
+                .withPlan(plan)
+                .withNewOID();
 
         System.out.println("response: " + new BufferedReader(new InputStreamReader(new BaremetricsPostHandler().postSubscriptionActive(plan, customer, subscription).getEntity().getContent())).readLine());
     }

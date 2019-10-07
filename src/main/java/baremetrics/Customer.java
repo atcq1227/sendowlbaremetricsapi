@@ -220,7 +220,9 @@ public class Customer {
     public Customer withNewOID() {
         Random rand = new Random(this.hashCode());
 
-        Integer OID = rand.nextInt();
+        Integer OID = Math.abs(rand.nextInt());
+
+        System.out.println("New customer OID: " + OID);
 
         return this.withOID(OID.toString());
     }

@@ -21,7 +21,9 @@ public class Plan {
     public Plan withNewOID() {
         Random rand = new Random(this.hashCode());
 
-        Integer OID = rand.nextInt();
+        Integer OID = Math.abs(rand.nextInt());
+
+        System.out.println("New plan OID: " + OID);
 
         return this.withOID(OID.toString());
     }
