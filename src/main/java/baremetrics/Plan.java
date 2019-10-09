@@ -16,6 +16,7 @@ public class Plan {
     String trialDurationUnit;
     String created;
     boolean active;
+    String currency;
     ArrayList<Amount> amounts;
 
     public Plan withNewOID() {
@@ -84,6 +85,12 @@ public class Plan {
 
     public Plan withActive(boolean active) {
         this.active = active;
+
+        return this;
+    }
+
+    public Plan withCurrency(String currency) {
+        this.currency = currency;
 
         return this;
     }

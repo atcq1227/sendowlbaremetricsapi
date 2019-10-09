@@ -22,9 +22,9 @@ public class LambdaHandler implements RequestHandler<InputStream, String> {
 
             System.out.println("New order: " + order.getOrderBody());
 
-            if(order.getState() == APIConstants.SubscriptionActiveMessage) {
+            if(order.getState().equals(APIConstants.SubscriptionActiveMessage)) {
                 new SubscriptionActiveHandler().handle(order);
-            } else if(order.getState() == APIConstants.SubscriptionCancelledMessage) {
+            } else if(order.getState().equals(APIConstants.SubscriptionCancelledMessage)) {
                 new SubscriptionCancelledHandler().handle(order);
             } else {
                 System.out.println("Unknown order state: " + order.getState());

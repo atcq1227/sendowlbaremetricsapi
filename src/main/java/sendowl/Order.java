@@ -27,6 +27,16 @@ public class Order {
                 .get("state").getAsString();
     }
 
+    public String getCurrency() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("settled_currency").getAsString();
+    }
+
+    public boolean getForSubscription() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("for_subscription").getAsBoolean();
+    }
+
     public String getProductName() {
         return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("cart").getAsJsonObject()

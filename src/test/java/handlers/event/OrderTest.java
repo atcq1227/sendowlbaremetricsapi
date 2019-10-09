@@ -68,4 +68,19 @@ public class OrderTest {
     public void testGetStateNegative() {
         Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getState());
     }
+
+    @Test
+    public void testGetCurrency() {
+        Assert.assertEquals("GBP", new Order(JsonUtil.testProductOrder).getCurrency());
+    }
+
+    @Test
+    public void testGetCurrencyNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getCurrency());
+    }
+
+    @Test
+    public void testGetForSubscription() {
+        Assert.assertFalse(new Order(JsonUtil.testProductOrder).getForSubscription());
+    }
 }

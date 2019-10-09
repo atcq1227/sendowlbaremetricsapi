@@ -1,6 +1,7 @@
 package handlers;
 
 import baremetrics.Customer;
+import baremetrics.Plan;
 import baremetrics.Subscription;
 
 import com.google.gson.JsonElement;
@@ -43,6 +44,27 @@ public class BaremetricsConnectionHandler {
         urlParameters.add(new BasicNameValuePair("notes", ""));
         urlParameters.add(new BasicNameValuePair("email", customer.getEmail()));
         urlParameters.add(new BasicNameValuePair("created", customer.getCreated()));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        return httpClient.execute(post);
+    }
+
+    public HttpResponse postPlan(Plan plan) throws IOException {
+        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsPlans;
+
+        httpClient = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(url);
+
+        post.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("oid", plan.getOID()));
+        urlParameters.add(new BasicNameValuePair("name", plan.getName()));
+        urlParameters.add(new BasicNameValuePair("currency", "usd"));
+        urlParameters.add(new BasicNameValuePair("interval", plan.getInterval()));
+        urlParameters.add(new BasicNameValuePair("interal_count", "1"));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 

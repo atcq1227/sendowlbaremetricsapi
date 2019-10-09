@@ -18,10 +18,24 @@ public class SubscriptionActiveHandler {
 
             Plan plan = new Plan()
                     .withOID(order.getProductID())
-                    .withName(order.getProductName());
+                    .withName(order.getProductName())
+                    .withCurrency(order.getCurrency());
 
-            if(baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID()).getStatusLine().getStatusCode() == 200) {
-                System.out.println("Plan not found");
+            if(order.getForSubscription()) {
+                plan.setInterval("monthly");
+            } else {
+                plan.setInterval("lifetime");
+            }
+
+            HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
+
+            if(findPlanResponse.getStatusLine().getStatusCode() == 200) {
+                System.out.println("Plan found with OID: " + plan.getOID());
+            } else if (findPlanResponse.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Plan not found with OID: " + plan.getOID());
+                System.out.println("Creating new plan");
+
+
             }
 
             Customer customer = new Customer()
