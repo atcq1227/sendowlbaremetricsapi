@@ -48,4 +48,24 @@ public class OrderTest {
     public void testGetCompletedCheckoutAtNegative() {
         Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getCompletedCheckoutAt());
     }
+
+    @Test
+    public void testGetProductID() {
+        Assert.assertEquals("2811", new Order(JsonUtil.testProductOrder).getProductID());
+    }
+
+    @Test
+    public void testGetProductIDNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getProductID());
+    }
+
+    @Test
+    public void testGetState() {
+        Assert.assertEquals("complete", new Order(JsonUtil.testProductOrder).getState());
+    }
+
+    @Test
+    public void testGetStateNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getState());
+    }
 }

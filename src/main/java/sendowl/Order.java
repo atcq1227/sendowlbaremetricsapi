@@ -14,6 +14,18 @@ public class Order {
     public Order(String orderBody) {
         this.orderBody = orderBody;
     }
+    public String getOrderBody() {
+        return orderBody;
+    }
+
+    public void setOrderBody(String orderBody) {
+        this.orderBody = orderBody;
+    }
+
+    public String getState() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("state").getAsString();
+    }
 
     public String getProductName() {
         return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
@@ -37,5 +49,13 @@ public class Order {
         return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("cart").getAsJsonObject()
                 .get("completed_checkout_at").getAsString();
+    }
+
+    public String getProductID() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("cart").getAsJsonObject()
+                .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
+                .get("product").getAsJsonObject()
+                .get("id").getAsString();
     }
 }

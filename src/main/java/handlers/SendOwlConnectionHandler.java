@@ -8,12 +8,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import util.APIConstants;
 
-
 import java.io.*;
 
-public class SendOwlGetHandler {
+public class SendOwlConnectionHandler {
     final private String API_KEY = "9c4ee8343e814c4";
     final private String API_SECRET = "6a90ab3cf8cd7f4a07e6";
+
+    HttpClient httpClient;
 
     public JsonArray getProductsJSON() {
         try {
@@ -25,10 +26,11 @@ public class SendOwlGetHandler {
         return null;
     }
 
-    private HttpResponse getHTTPResponse(String APIConstant) {
+    public HttpResponse getHTTPResponse(String APIConstant) {
         String url = "https://" + API_KEY + ":" + API_SECRET + "@www.sendowl.com" + APIConstant;
 
-        HttpClient httpClient = new DefaultHttpClient();
+        httpClient = new DefaultHttpClient();
+
         HttpGet get = new HttpGet(url);
 
         get.addHeader("Accept", "application/json");
