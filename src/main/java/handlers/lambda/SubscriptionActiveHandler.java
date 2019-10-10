@@ -19,7 +19,8 @@ public class SubscriptionActiveHandler {
             Plan plan = new Plan()
                     .withOID(order.getProductID())
                     .withName(order.getProductName())
-                    .withCurrency(order.getCurrency());
+                    .withCurrency(order.getCurrency())
+                    .withRecurringPrice(order.getRecurringPrice());
 
             if(order.getForSubscription()) {
                 plan.setInterval("monthly");
@@ -35,11 +36,18 @@ public class SubscriptionActiveHandler {
                 System.out.println("Plan not found with OID: " + plan.getOID());
                 System.out.println("Creating new plan");
 
+                HttpResponse postNewPlan = baremetricsConnectionHandler.postSubscriptionPlan(plan);
 
+                if(postNewPlan.getStatusLine().getStatusCode() == 200) {
+                    System.out.println("Plan successfully posted! OID: " + plan.getOID());
+                } else {
+                    System.out.println("Error posting new plan");
+                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postNewPlan.getEntity().getContent())).readLine());
+                }
             }
 
             Customer customer = new Customer()
-                    .withActive(true)
+                    .withActive("true")
                     .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                     .withEmail(order.getBuyerEmail())
                     .withName(order.getBuyerName());

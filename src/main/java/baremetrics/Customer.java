@@ -16,7 +16,7 @@ public class Customer {
     private String displayName;
     private String notes;
     private int LTV;
-    private boolean isActive;
+    private String isActive;
     private boolean isCancelled;
     private String currentMRR;
     private Plan currentPlan;
@@ -101,11 +101,11 @@ public class Customer {
         this.LTV = LTV;
     }
 
-    public boolean isActive() {
+    public String isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(String active) {
         isActive = active;
     }
 
@@ -193,8 +193,8 @@ public class Customer {
         return this;
     }
 
-    public Customer withActive(boolean active) {
-        isActive = active;
+    public Customer withActive(String active) {
+        active = active;
 
         return this;
     }

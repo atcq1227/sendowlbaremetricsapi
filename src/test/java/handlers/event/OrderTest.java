@@ -83,4 +83,14 @@ public class OrderTest {
     public void testGetForSubscription() {
         Assert.assertFalse(new Order(JsonUtil.testProductOrder).getForSubscription());
     }
+
+    @Test
+    public void testGetPrice() {
+        Assert.assertEquals("1500", new Order(JsonUtil.testProductOrder).getPrice());
+    }
+
+    @Test
+    public void testGetPriceNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getPrice());
+    }
 }

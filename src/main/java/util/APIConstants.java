@@ -11,4 +11,5 @@ public class APIConstants {
     public static String BaremetricsAPIKey = "lk_HvwQkcamtU6MR6KccqXiWQ";
     public static String SubscriptionActiveMessage = "subscription_active";
     public static String SubscriptionCancelledMessage = "subscription_cancelled";
+    public static String WebhookTestMessage = "initial";
 }

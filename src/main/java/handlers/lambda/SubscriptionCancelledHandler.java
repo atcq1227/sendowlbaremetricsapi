@@ -25,7 +25,6 @@ public class SubscriptionCancelledHandler {
                     .withName(order.getProductName());
 
             Customer customer = new Customer()
-                    .withActive(false)
                     .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                     .withEmail(order.getBuyerEmail())
                     .withName(order.getBuyerName());
@@ -41,7 +40,7 @@ public class SubscriptionCancelledHandler {
             if(putSubscriptionCancelledResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Subscription cancelled with OID: " + subscription.getOID());
             } else {
-                System.out.println("Error cancelled subscription with OID: " + subscription.getOID());
+                System.out.println("Error cancelling subscription with OID: " + subscription.getOID());
                 System.out.println("Error: " + new BufferedReader(new InputStreamReader(putSubscriptionCancelledResponse.getEntity().getContent())).readLine());
             }
 

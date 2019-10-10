@@ -17,7 +17,22 @@ public class Plan {
     String created;
     boolean active;
     String currency;
+    String recurringPrice;
     ArrayList<Amount> amounts;
+
+    public Plan withRecurringPrice(String recurringPrice) {
+        this.recurringPrice = recurringPrice;
+
+        return this;
+    }
+
+    public String getRecurringPrice() {
+        return recurringPrice;
+    }
+
+    public void setRecurringPrice(String recurringPrice) {
+        this.recurringPrice = recurringPrice;
+    }
 
     public Plan withNewOID() {
         Random rand = new Random(this.hashCode());

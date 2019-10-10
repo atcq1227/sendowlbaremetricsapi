@@ -3,6 +3,8 @@ package baremetrics;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Random;
 
@@ -14,7 +16,7 @@ public class Subscription {
     String cancelledAt;
     String startedAt;
     boolean processed;
-    boolean active;
+    String active;
     int quantity;
     int discount;
     Plan plan;
@@ -35,6 +37,12 @@ public class Subscription {
         return this;
     }
 
+    public Subscription withActive(String active) {
+        this.active = active;
+
+        return this;
+    }
+
     public Subscription withCustomer(Customer customer) {
         this.customer = customer;
 
@@ -42,7 +50,9 @@ public class Subscription {
     }
 
     public Subscription startedNow() {
-        Long timestamp = new Date().getTime();
+        Long timestamp = (System.currentTimeMillis() / 1000L) - 86400;
+
+        System.out.println(timestamp.toString());
 
         return this.withStartedAt(timestamp.toString());
     }
@@ -115,11 +125,11 @@ public class Subscription {
         this.processed = processed;
     }
 
-    public boolean isActive() {
+    public String isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(String active) {
         this.active = active;
     }
 

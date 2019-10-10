@@ -26,6 +26,8 @@ public class LambdaHandler implements RequestHandler<InputStream, String> {
                 new SubscriptionActiveHandler().handle(order);
             } else if(order.getState().equals(APIConstants.SubscriptionCancelledMessage)) {
                 new SubscriptionCancelledHandler().handle(order);
+            } else if(order.getState().equals(APIConstants.WebhookTestMessage)) {
+                System.out.println("Received webhook test");
             } else {
                 System.out.println("Unknown order state: " + order.getState());
             }

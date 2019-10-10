@@ -45,6 +45,22 @@ public class Order {
                 .get("name").getAsString();
     }
 
+    public String getPrice() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("cart").getAsJsonObject()
+                .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
+                .get("product").getAsJsonObject()
+                .get("price").getAsString().substring(1).replace(".", "");
+    }
+
+    public String getRecurringPrice() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("cart").getAsJsonObject()
+                .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
+                .get("product").getAsJsonObject()
+                .get("recurring_price").getAsString().substring(1);
+    }
+
     public String getBuyerName() {
         return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("buyer_name").getAsString();
