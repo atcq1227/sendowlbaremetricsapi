@@ -39,6 +39,7 @@ public class SubscriptionActiveHandler {
             }
 
             Customer customer = new Customer()
+                    .withActive(true)
                     .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                     .withEmail(order.getBuyerEmail())
                     .withName(order.getBuyerName());

@@ -25,6 +25,7 @@ public class SubscriptionCancelledHandler {
                     .withName(order.getProductName());
 
             Customer customer = new Customer()
+                    .withActive(false)
                     .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                     .withEmail(order.getBuyerEmail())
                     .withName(order.getBuyerName());
