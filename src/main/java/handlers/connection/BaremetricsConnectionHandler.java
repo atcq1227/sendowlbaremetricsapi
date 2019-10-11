@@ -31,7 +31,7 @@ public class BaremetricsConnectionHandler {
     HttpClient httpClient;
 
     public HttpResponse postCustomer(Customer customer) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCustomers;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCustomers;
 
         httpClient = new DefaultHttpClient();
 
@@ -53,7 +53,7 @@ public class BaremetricsConnectionHandler {
     }
 
     public HttpResponse postSubscriptionPlan(Plan plan) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsPlans;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsPlans;
 
         httpClient = new DefaultHttpClient();
 
@@ -74,7 +74,7 @@ public class BaremetricsConnectionHandler {
     }
 
     public HttpResponse postSubscriptionActive(Subscription subscription) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions;
 
         httpClient = new DefaultHttpClient();
 
@@ -96,7 +96,7 @@ public class BaremetricsConnectionHandler {
     }
 
     public HttpResponse putSubscriptionCancelled(Subscription subscription) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions + "/" + subscription.getOID() + APIConstants.BaremetricsCancel;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions + "/" + subscription.getOID() + APIConstants.BaremetricsCancel;
 
         httpClient = new DefaultHttpClient();
 
@@ -108,7 +108,7 @@ public class BaremetricsConnectionHandler {
     }
 
     public HttpResponse postCharge(Charge charge) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCharges;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCharges;
 
         httpClient = new DefaultHttpClient();
 
@@ -128,7 +128,7 @@ public class BaremetricsConnectionHandler {
     }
 
     public HttpResponse getSpecificObjectHTTP(String APIPath, String OID) throws IOException {
-        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIPath + "/"+ OID;
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIPath + "/"+ OID;
 
         httpClient = new DefaultHttpClient();
 
