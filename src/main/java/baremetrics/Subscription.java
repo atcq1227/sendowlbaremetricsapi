@@ -50,9 +50,7 @@ public class Subscription {
     }
 
     public Subscription startedNow() {
-        Long timestamp = (System.currentTimeMillis() / 1000L) - 86400;
-
-        System.out.println(timestamp.toString());
+        Long timestamp = (System.currentTimeMillis() / 1000L);
 
         return this.withStartedAt(timestamp.toString());
     }

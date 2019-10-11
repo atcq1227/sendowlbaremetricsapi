@@ -3,7 +3,7 @@ package handlers.lambda;
 import baremetrics.Customer;
 import baremetrics.Plan;
 import baremetrics.Subscription;
-import handlers.BaremetricsConnectionHandler;
+import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
 import sendowl.Order;
 import util.APIConstants;
@@ -20,13 +20,8 @@ public class SubscriptionActiveHandler {
                     .withOID(order.getProductID())
                     .withName(order.getProductName())
                     .withCurrency(order.getCurrency())
-                    .withRecurringPrice(order.getRecurringPrice());
-
-            if(order.getForSubscription()) {
-                plan.setInterval("monthly");
-            } else {
-                plan.setInterval("lifetime");
-            }
+                    .withRecurringPrice(order.getRecurringPrice())
+                    .withInterval(order.getFrequencyInterval());
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
 
@@ -55,7 +50,6 @@ public class SubscriptionActiveHandler {
             HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
 
             if(findCustomerResponse.getStatusLine().getStatusCode() == 404) {
-                System.out.println(findCustomerResponse.getStatusLine().getStatusCode());
                 System.out.println("Customer with OID: " + customer.getOID() + " not found, creating new customer");
 
                 HttpResponse postCustomerResponse = baremetricsConnectionHandler.postCustomer(customer);

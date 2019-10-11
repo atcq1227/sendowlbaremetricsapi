@@ -11,77 +11,77 @@ public class OrderTest {
 
     @Test
     public void testGetPlanName() {
-        Assert.assertEquals("My Product", new Order(JsonUtil.testProductOrder).getProductName());
+        Assert.assertEquals("Playin' it safe.", new Order(JsonUtil.testSubscriptionOrder).getProductName());
     }
 
     @Test
     public void testGetPlanNameNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getProductName());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getProductName());
     }
 
     @Test
     public void testGetBuyerName() {
-        Assert.assertEquals("Mr Buyer", new Order(JsonUtil.testProductOrder).getBuyerName());
+        Assert.assertEquals("Test Buyer", new Order(JsonUtil.testSubscriptionOrder).getBuyerName());
     }
 
     @Test
     public void testGetBuyerNameNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getBuyerName());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getBuyerName());
     }
 
     @Test
     public void testGetBuyerEmail() {
-        Assert.assertEquals("mrbuyer@gmail.com", new Order(JsonUtil.testProductOrder).getBuyerEmail());
+        Assert.assertEquals("testEmail", new Order(JsonUtil.testSubscriptionOrder).getBuyerEmail());
     }
 
     @Test
     public void testGetBuyerEmailNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getBuyerEmail());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getBuyerEmail());
     }
 
     @Test
     public void testGetCompletedCheckoutAt() {
-        Assert.assertEquals("2016-01-05T10:59:24Z", new Order(JsonUtil.testProductOrder).getCompletedCheckoutAt());
+        Assert.assertEquals("2019-10-10T20:25:39Z", new Order(JsonUtil.testSubscriptionOrder).getCompletedCheckoutAt());
     }
 
     @Test
     public void testGetCompletedCheckoutAtNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getCompletedCheckoutAt());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getCompletedCheckoutAt());
     }
 
     @Test
     public void testGetProductID() {
-        Assert.assertEquals("2811", new Order(JsonUtil.testProductOrder).getProductID());
+        Assert.assertEquals("7489", new Order(JsonUtil.testSubscriptionOrder).getProductID());
     }
 
     @Test
     public void testGetProductIDNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getProductID());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getProductID());
     }
 
     @Test
     public void testGetState() {
-        Assert.assertEquals("complete", new Order(JsonUtil.testProductOrder).getState());
+        Assert.assertEquals("subscription_active", new Order(JsonUtil.testSubscriptionOrder).getState());
     }
 
     @Test
     public void testGetStateNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getState());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getState());
     }
 
     @Test
     public void testGetCurrency() {
-        Assert.assertEquals("GBP", new Order(JsonUtil.testProductOrder).getCurrency());
+        Assert.assertEquals("USD", new Order(JsonUtil.testSubscriptionOrder).getCurrency());
     }
 
     @Test
     public void testGetCurrencyNegative() {
-        Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getCurrency());
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getCurrency());
     }
 
     @Test
     public void testGetForSubscription() {
-        Assert.assertFalse(new Order(JsonUtil.testProductOrder).getForSubscription());
+        Assert.assertTrue(new Order(JsonUtil.testSubscriptionOrder).getForSubscription());
     }
 
     @Test
@@ -92,5 +92,25 @@ public class OrderTest {
     @Test
     public void testGetPriceNegative() {
         Assert.assertNotEquals("", new Order(JsonUtil.testProductOrder).getPrice());
+    }
+
+    @Test
+    public void testGetRecurringPrice() {
+        Assert.assertEquals("1500", new Order(JsonUtil.testSubscriptionOrder).getRecurringPrice());
+    }
+
+    @Test
+    public void testGetRecurringPriceNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getRecurringPrice());
+    }
+
+    @Test
+    public void testGetFrequencyInterval() {
+        Assert.assertEquals("month", new Order(JsonUtil.testSubscriptionOrder).getFrequencyInterval());
+    }
+
+    @Test
+    public void testGetFrequencyIntervalNegative() {
+        Assert.assertNotEquals("", new Order(JsonUtil.testSubscriptionOrder).getFrequencyInterval());
     }
 }

@@ -58,7 +58,15 @@ public class Order {
                 .get("cart").getAsJsonObject()
                 .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
                 .get("product").getAsJsonObject()
-                .get("recurring_price").getAsString().substring(1);
+                .get("recurring_price").getAsString().replace(".", "");
+    }
+
+    public String getFrequencyInterval() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("cart").getAsJsonObject()
+                .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
+                .get("product").getAsJsonObject()
+                .get("frequency_interval").getAsString().replace(".", "");
     }
 
     public String getBuyerName() {

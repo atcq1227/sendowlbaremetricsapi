@@ -26,6 +26,14 @@ public class Plan {
         return this;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public String getRecurringPrice() {
         return recurringPrice;
     }

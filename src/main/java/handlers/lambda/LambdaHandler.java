@@ -1,12 +1,7 @@
 package handlers.lambda;
 
-import baremetrics.Customer;
-import baremetrics.Plan;
-import baremetrics.Subscription;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import handlers.BaremetricsConnectionHandler;
-import org.apache.http.HttpResponse;
 import sendowl.Order;
 import util.APIConstants;
 
@@ -22,15 +17,22 @@ public class LambdaHandler implements RequestHandler<InputStream, String> {
 
             System.out.println("New order: " + order.getOrderBody());
 
-            if(order.getState().equals(APIConstants.SubscriptionActiveMessage)) {
-                new SubscriptionActiveHandler().handle(order);
-            } else if(order.getState().equals(APIConstants.SubscriptionCancelledMessage)) {
-                new SubscriptionCancelledHandler().handle(order);
-            } else if(order.getState().equals(APIConstants.WebhookTestMessage)) {
-                System.out.println("Received webhook test");
+            if(order.getForSubscription()) {
+                if(order.getState().equals(APIConstants.SubscriptionActiveMessage)) {
+                    new SubscriptionActiveHandler().handle(order);
+                } else if(order.getState().equals(APIConstants.SubscriptionCancelledMessage)) {
+                    new SubscriptionCancelledHandler().handle(order);
+                } else if(order.getState().equals(APIConstants.WebhookTestMessage)) {
+                    System.out.println("Received webhook test");
+                } else {
+                    System.out.println("Unknown order state: " + order.getState());
+                }
+            } else if(!order.getForSubscription()) {
+                new ChargeHandler().handle(order);
             } else {
-                System.out.println("Unknown order state: " + order.getState());
+                System.out.println("Error in order");
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();

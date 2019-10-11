@@ -1,5 +1,6 @@
-package handlers;
+package handlers.connection;
 
+import baremetrics.Charge;
 import baremetrics.Customer;
 import baremetrics.Plan;
 import baremetrics.Subscription;
@@ -63,7 +64,7 @@ public class BaremetricsConnectionHandler {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("oid", plan.getOID()));
         urlParameters.add(new BasicNameValuePair("name", plan.getName()));
-        urlParameters.add(new BasicNameValuePair("currency", "USD"));
+        urlParameters.add(new BasicNameValuePair("currency", plan.getCurrency()));
         urlParameters.add(new BasicNameValuePair("amount", plan.getRecurringPrice()));
         urlParameters.add(new BasicNameValuePair("interval_count", "1"));
 
@@ -104,6 +105,26 @@ public class BaremetricsConnectionHandler {
         put.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
 
         return httpClient.execute(put);
+    }
+
+    public HttpResponse postCharge(Charge charge) throws IOException {
+        String url = "https://api.baremetrics.com/v1" + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCharges;
+
+        httpClient = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(url);
+
+        post.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("oid", charge.getOID()));
+        urlParameters.add(new BasicNameValuePair("amount", charge.getAmount()));
+        urlParameters.add(new BasicNameValuePair("currency", charge.getCurrency()));
+        urlParameters.add(new BasicNameValuePair("customer_oid", charge.getCustomer().getOID()));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        return httpClient.execute(post);
     }
 
     public HttpResponse getSpecificObjectHTTP(String APIPath, String OID) throws IOException {

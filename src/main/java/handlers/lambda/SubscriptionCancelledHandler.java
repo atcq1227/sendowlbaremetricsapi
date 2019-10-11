@@ -3,16 +3,12 @@ package handlers.lambda;
 import baremetrics.Customer;
 import baremetrics.Plan;
 import baremetrics.Subscription;
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import handlers.BaremetricsConnectionHandler;
+import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
 import sendowl.Order;
-import util.APIConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class SubscriptionCancelledHandler {
