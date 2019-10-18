@@ -68,7 +68,7 @@ public class SubscriptionActiveHandler {
                     .withOID(plan.getOID() + "_" + customer.getOID())
                     .withCustomer(customer)
                     .withPlan(plan)
-                    .startedNow();
+                    .withStartedAt(order.getCompletedCheckoutAt());
 
             HttpResponse postSubscriptionActiveResponse = baremetricsConnectionHandler.postSubscriptionActive(subscription);
 

@@ -28,8 +28,7 @@ public class SubscriptionCancelledHandler {
             Subscription subscription = new Subscription()
                     .withOID(plan.getOID() + "_" + customer.getOID())
                     .withCustomer(customer)
-                    .withPlan(plan)
-                    .startedNow();
+                    .withPlan(plan);
 
             HttpResponse putSubscriptionCancelledResponse = baremetricsConnectionHandler.putSubscriptionCancelled(subscription);
 

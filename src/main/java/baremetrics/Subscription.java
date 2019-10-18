@@ -55,7 +55,7 @@ public class Subscription {
         return this.withStartedAt(timestamp.toString());
     }
 
-    private Subscription withStartedAt(String startedAt) {
+    public Subscription withStartedAt(String startedAt) {
         this.startedAt = startedAt;
 
         return this;
