@@ -61,6 +61,12 @@ public class Subscription {
         return this;
     }
 
+    public Subscription withCancelledAt(String cancelledAt) {
+        this.cancelledAt = cancelledAt;
+
+        return this;
+    }
+
     public Subscription withPlan(Plan plan) {
         this.plan = plan;
 

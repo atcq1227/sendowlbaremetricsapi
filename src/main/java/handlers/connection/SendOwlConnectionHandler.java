@@ -26,6 +26,16 @@ public class SendOwlConnectionHandler {
         return null;
     }
 
+    public JsonArray getOrdersJSON() {
+        try {
+            return new JsonParser().parse(new InputStreamReader(getHTTPResponse(APIConstants.SendOwlOrders).getEntity().getContent())).getAsJsonArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public HttpResponse getHTTPResponse(String APIConstant) {
         String url = "https://" + API_KEY + ":" + API_SECRET + "@www.sendowl.com" + APIConstant;
 

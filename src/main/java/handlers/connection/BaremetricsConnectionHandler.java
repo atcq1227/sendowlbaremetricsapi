@@ -73,6 +73,29 @@ public class BaremetricsConnectionHandler {
         return httpClient.execute(post);
     }
 
+    public HttpResponse postBackloadSubscriptionPlan(Plan plan) throws IOException {
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsPlans;
+
+        httpClient = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(url);
+
+        post.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("oid", plan.getOID()));
+        urlParameters.add(new BasicNameValuePair("name", plan.getName()));
+        urlParameters.add(new BasicNameValuePair("currency", plan.getCurrency()));
+        urlParameters.add(new BasicNameValuePair("amount", plan.getRecurringPrice()));
+        urlParameters.add(new BasicNameValuePair("created", plan.getCreated()));
+        urlParameters.add(new BasicNameValuePair("interval", plan.getInterval()));
+        urlParameters.add(new BasicNameValuePair("interval_count", "1"));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        return httpClient.execute(post);
+    }
+
     public HttpResponse postSubscriptionActive(Subscription subscription) throws IOException {
         String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions;
 
@@ -86,6 +109,28 @@ public class BaremetricsConnectionHandler {
         urlParameters.add(new BasicNameValuePair("oid", subscription.getOID()));
         urlParameters.add(new BasicNameValuePair("started_at", subscription.getStartedAt()));
         urlParameters.add(new BasicNameValuePair("canceled_at", "nil"));
+        urlParameters.add(new BasicNameValuePair("plan_oid", subscription.getPlan().getOID()));
+        urlParameters.add(new BasicNameValuePair("customer_oid", subscription.getCustomer().getOID()));
+        urlParameters.add(new BasicNameValuePair("active", subscription.isActive()));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        return httpClient.execute(post);
+    }
+
+    public HttpResponse postBackloadSubscriptionCancelled(Subscription subscription) throws IOException {
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsSubscriptions;
+
+        httpClient = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(url);
+
+        post.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("oid", subscription.getOID()));
+        urlParameters.add(new BasicNameValuePair("started_at", subscription.getStartedAt()));
+        urlParameters.add(new BasicNameValuePair("canceled_at", subscription.getCancelledAt()));
         urlParameters.add(new BasicNameValuePair("plan_oid", subscription.getPlan().getOID()));
         urlParameters.add(new BasicNameValuePair("customer_oid", subscription.getCustomer().getOID()));
         urlParameters.add(new BasicNameValuePair("active", subscription.isActive()));

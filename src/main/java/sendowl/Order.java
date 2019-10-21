@@ -92,4 +92,9 @@ public class Order {
                 .get("product").getAsJsonObject()
                 .get("id").getAsString();
     }
+
+    public String getBackloadProductID() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("subscription_id").getAsString();
+    }
 }

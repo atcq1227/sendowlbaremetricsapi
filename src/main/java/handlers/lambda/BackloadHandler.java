@@ -14,19 +14,30 @@ import util.APIConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BackloadHandler {
     public void handle() {
         Fillo fillo = new Fillo();
 
         try {
-            Connection connection = fillo.getConnection("C:\\Users\\E671532\\Documents\\orders.xlsx");
+            Connection connection = fillo.getConnection("/Users/matthewshaw/Downloads/orders_report.xlsx");
 
-            String query = "Select * from orders_report";
+            String query = "Select * from Worksheet";
+
+            System.out.println(connection.getMetaData().getTableNames());
 
             Recordset rs = connection.executeQuery(query);
 
+            System.out.println(rs.getFieldNames());
+
             while(rs.next()) {
+                for(int i = 0; i < 23; i++) {
+                    rs.next();
+                }
+
                 if(rs.getField("State").equals("Subscription Active") || rs.getField("State").equals("Subscription Cancelling")) {
                     handleActiveSubscription(rs);
                 } else if(rs.getField("State").equals("Subscription Cancelled")) {
@@ -49,15 +60,15 @@ public class BackloadHandler {
 
             if(rs.getField("Item Name").equals("Playin' it safe.")) {
                 OID = "7489";
-                recurringPrice = "15.00";
+                recurringPrice = "1500";
                 interval = "month";
             } else if(rs.getField("Item Name").equals("Goin' steady.")) {
                 OID = "7491";
-                recurringPrice = "135.00";
+                recurringPrice = "13500";
                 interval = "year";
             } else {
                 OID = "8308";
-                recurringPrice = "15.00";
+                recurringPrice = "1500";
                 interval = "month";
             }
 
@@ -66,7 +77,8 @@ public class BackloadHandler {
                     .withName(rs.getField("Item Name"))
                     .withCurrency(rs.getField("Currency"))
                     .withRecurringPrice(recurringPrice)
-                    .withInterval(interval);
+                    .withInterval(interval)
+                    .withCreated(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
 
@@ -76,7 +88,7 @@ public class BackloadHandler {
                 System.out.println("Plan not found with OID: " + plan.getOID());
                 System.out.println("Creating new plan");
 
-                HttpResponse postNewPlan = baremetricsConnectionHandler.postSubscriptionPlan(plan);
+                HttpResponse postNewPlan = baremetricsConnectionHandler.postBackloadSubscriptionPlan(plan);
 
                 if (postNewPlan.getStatusLine().getStatusCode() == 200) {
                     System.out.println("Plan successfully posted! OID: " + plan.getOID());
@@ -90,7 +102,8 @@ public class BackloadHandler {
                     .withActive("true")
                     .withOID(rs.getField("Buyer Email").replace("@", "_").replace(".com", ""))
                     .withEmail(rs.getField("Buyer Email"))
-                    .withName(rs.getField("Buyer Name"));
+                    .withName(rs.getField("Buyer Name"))
+                    .withCreated(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
 
             HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
 
@@ -113,7 +126,7 @@ public class BackloadHandler {
                     .withOID(plan.getOID() + "_" + customer.getOID())
                     .withCustomer(customer)
                     .withPlan(plan)
-                    .withStartedAt(rs.getField("Order date/time"));
+                    .withStartedAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
 
             HttpResponse postSubscriptionActiveResponse = baremetricsConnectionHandler.postSubscriptionActive(subscription);
 
@@ -124,7 +137,7 @@ public class BackloadHandler {
                 System.out.println("Error: " + new BufferedReader(new InputStreamReader(postSubscriptionActiveResponse.getEntity().getContent())).readLine());
             }
 
-        } catch(IOException e) {
+        } catch(IOException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -139,43 +152,85 @@ public class BackloadHandler {
 
             if(rs.getField("Item Name").equals("Playin' it safe.")) {
                 OID = "7489";
-                recurringPrice = "15.00";
+                recurringPrice = "1500";
                 interval = "month";
             } else if(rs.getField("Item Name").equals("Goin' steady.")) {
                 OID = "7491";
-                recurringPrice = "135.00";
+                recurringPrice = "13500";
                 interval = "year";
             } else {
                 OID = "8308";
-                recurringPrice = "15.00";
+                recurringPrice = "1500";
                 interval = "month";
             }
 
             Plan plan = new Plan()
                     .withOID(OID)
-                    .withName(rs.getField("Item Name"));
+                    .withName(rs.getField("Item Name"))
+                    .withCurrency(rs.getField("Currency"))
+                    .withRecurringPrice(recurringPrice)
+                    .withInterval(interval)
+                    .withCreated(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
+
+            HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
+
+            if (findPlanResponse.getStatusLine().getStatusCode() == 200) {
+                System.out.println("Plan found with OID: " + plan.getOID());
+            } else if (findPlanResponse.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Plan not found with OID: " + plan.getOID());
+                System.out.println("Creating new plan");
+
+                HttpResponse postNewPlan = baremetricsConnectionHandler.postBackloadSubscriptionPlan(plan);
+
+                if (postNewPlan.getStatusLine().getStatusCode() == 200) {
+                    System.out.println("Plan successfully posted! OID: " + plan.getOID());
+                } else {
+                    System.out.println("Error posting new plan");
+                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postNewPlan.getEntity().getContent())).readLine());
+                }
+            }
 
             Customer customer = new Customer()
+                    .withActive("true")
                     .withOID(rs.getField("Buyer Email").replace("@", "_").replace(".com", ""))
                     .withEmail(rs.getField("Buyer Email"))
-                    .withName(rs.getField("Buyer Name"));
+                    .withName(rs.getField("Buyer Name"))
+                    .withCreated(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
+
+            HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
+
+            if (findCustomerResponse.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Customer with OID: " + customer.getOID() + " not found, creating new customer");
+
+                HttpResponse postCustomerResponse = baremetricsConnectionHandler.postCustomer(customer);
+
+                if (postCustomerResponse.getStatusLine().getStatusCode() == 200) {
+                    System.out.println("Customer successfully posted! OID: " + customer.getOID());
+                } else {
+                    System.out.println("Error posting customer with OID: " + customer.getOID());
+                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postCustomerResponse.getEntity().getContent())).readLine());
+                }
+            } else if (findCustomerResponse.getStatusLine().getStatusCode() == 200) {
+                System.out.println("Found existing customer with OID: " + customer.getOID());
+            }
 
             Subscription subscription = new Subscription()
                     .withOID(plan.getOID() + "_" + customer.getOID())
                     .withCustomer(customer)
                     .withPlan(plan)
-                    .startedNow();
+                    .withStartedAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L))
+                    .withCancelledAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ssz").parse(rs.getField("Subscription Cancelled At")).getTime() / 1000L));
 
-            HttpResponse putSubscriptionCancelledResponse = baremetricsConnectionHandler.putSubscriptionCancelled(subscription);
+            HttpResponse postSubscriptionActiveResponse = baremetricsConnectionHandler.postBackloadSubscriptionCancelled(subscription);
 
-            if(putSubscriptionCancelledResponse.getStatusLine().getStatusCode() == 200) {
-                System.out.println("Subscription cancelled with OID: " + subscription.getOID());
+            if (postSubscriptionActiveResponse.getStatusLine().getStatusCode() == 200) {
+                System.out.println("Subscription successfully posted! OID: " + subscription.getOID());
             } else {
-                System.out.println("Error cancelling subscription with OID: " + subscription.getOID());
-                System.out.println("Error: " + new BufferedReader(new InputStreamReader(putSubscriptionCancelledResponse.getEntity().getContent())).readLine());
+                System.out.println("Error posting subscription with OID: " + subscription.getOID());
+                System.out.println("Error: " + new BufferedReader(new InputStreamReader(postSubscriptionActiveResponse.getEntity().getContent())).readLine());
             }
 
-        } catch (IOException e) {
+        } catch(IOException | ParseException e) {
             e.printStackTrace();
         }
     }

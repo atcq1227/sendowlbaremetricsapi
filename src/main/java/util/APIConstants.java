@@ -5,6 +5,7 @@ public class APIConstants {
     private final static String baremetricsLiveBaseURL = "https://api.baremetrics.com/v1";
 
     public final static String SendOwlProducts = "/api/v1/products";
+    public final static String SendOwlOrders = "/api/v1_3/orders";
 
     public final static String BaremetricsSubscriptions = "/subscriptions";
     public final static String BaremetricsAPIBaseURL = baremetricsSandboxBaseURL;
