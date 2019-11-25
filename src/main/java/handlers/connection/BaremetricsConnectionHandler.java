@@ -172,6 +172,26 @@ public class BaremetricsConnectionHandler {
         return httpClient.execute(post);
     }
 
+    public HttpResponse postRefund(Subscription subscription) throws IOException {
+        String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIConstants.BaremetricsCharges;
+
+        httpClient = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(url);
+
+        post.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("oid", subscription.getOID()));
+        urlParameters.add(new BasicNameValuePair("plan_oid", subscription.getPlan().getOID()));
+        urlParameters.add(new BasicNameValuePair("customer_oid", subscription.getCustomer().getOID()));
+        urlParameters.add(new BasicNameValuePair("active", subscription.isActive()));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        return httpClient.execute(post);
+    }
+
     public HttpResponse getSpecificObjectHTTP(String APIPath, String OID) throws IOException {
         String url = APIConstants.BaremetricsAPIBaseURL + APIConstants.BaremetricsSourceID + APIPath + "/"+ OID;
 

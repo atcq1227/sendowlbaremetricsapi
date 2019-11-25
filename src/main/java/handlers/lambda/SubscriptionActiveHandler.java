@@ -7,9 +7,14 @@ import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
 import sendowl.Order;
 import util.APIConstants;
+import util.EmailUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 public class SubscriptionActiveHandler {
     public String handle(Order order) {
@@ -36,8 +41,10 @@ public class SubscriptionActiveHandler {
                 if(postNewPlan.getStatusLine().getStatusCode() == 200) {
                     System.out.println("Plan successfully posted! OID: " + plan.getOID());
                 } else {
+                    String error = new BufferedReader(new InputStreamReader(postNewPlan.getEntity().getContent())).readLine();
+                    new EmailUtil().sendEmail("Plan post error", error);
                     System.out.println("Error posting new plan");
-                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postNewPlan.getEntity().getContent())).readLine());
+                    System.out.println("Error: " + error);
                 }
             }
 
@@ -57,29 +64,33 @@ public class SubscriptionActiveHandler {
                 if(postCustomerResponse.getStatusLine().getStatusCode() == 200) {
                     System.out.println("Customer successfully posted! OID: " + customer.getOID());
                 } else {
+                    String error = new BufferedReader(new InputStreamReader(postCustomerResponse.getEntity().getContent())).readLine();
+                    new EmailUtil().sendEmail("Customer post error", error);
                     System.out.println("Error posting customer with OID: " + customer.getOID());
-                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postCustomerResponse.getEntity().getContent())).readLine());
+                    System.out.println("Error: " + error);
                 }
             } else if (findCustomerResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Found existing customer with OID: " + customer.getOID());
             }
 
             Subscription subscription = new Subscription()
-                    .withOID(plan.getOID() + "_" + customer.getOID())
+                    .withOID(plan.getOID() + "_" + customer.getOID() + "_" + order.getCompletedCheckoutAt().replace(":", ""))
                     .withCustomer(customer)
                     .withPlan(plan)
-                    .withStartedAt(order.getCompletedCheckoutAt());
+                    .withStartedAt(String.valueOf(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(order.getCompletedCheckoutAt()).getTime() / 1000L));
 
             HttpResponse postSubscriptionActiveResponse = baremetricsConnectionHandler.postSubscriptionActive(subscription);
 
             if(postSubscriptionActiveResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Subscription successfully posted! OID: " + subscription.getOID());
             } else {
+                String error = new BufferedReader(new InputStreamReader(postSubscriptionActiveResponse.getEntity().getContent())).readLine();
+                new EmailUtil().sendEmail("Subscription post error", error);
                 System.out.println("Error posting subscription with OID: " + subscription.getOID());
-                System.out.println("Error: " + new BufferedReader(new InputStreamReader(postSubscriptionActiveResponse.getEntity().getContent())).readLine());
+                System.out.println("Error: " + error);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
 

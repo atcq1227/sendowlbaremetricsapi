@@ -34,6 +34,8 @@ public class APIBackloadHandler {
             HttpGet get = new HttpGet(url);
 
             get.addHeader("Accept", "application/json");
+            get.addHeader("per_page", "50");
+            get.addHeader("page", Integer.toString(pageNumber));
 
             HttpResponse response = httpClient.execute(get);
 
@@ -41,25 +43,25 @@ public class APIBackloadHandler {
             System.out.println("Response Code : " +
                     response.getStatusLine().getStatusCode());
 
-            responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
-
-            JsonArray array = new JsonParser().parse(responseString).getAsJsonArray();
-
-            array.forEach(object -> {
-                Order order = new Order(object.getAsJsonObject().toString());
-
-                if(order.getState().equals("subscription_active")) {
-                    handleActiveSubscription(order);
-                }
-            });
-
-            pageNumber++;
-
-            url = "https://4ab76f6325e7eb2:6ca56c1843e7c63e9d35@www.sendowl.com/api/v1_3/orders?per_page=50&page=" + pageNumber;
-
-            System.out.println(responseString.length());
-
-            Thread.sleep(1000);
+//            responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
+//
+//            JsonArray array = new JsonParser().parse(responseString).getAsJsonArray();
+//
+//            array.forEach(object -> {
+//                Order order = new Order(object.getAsJsonObject().toString());
+//
+//                if(order.getState().equals("subscription_active")) {
+//                    handleActiveSubscription(order);
+//                }
+//            });
+//
+//            pageNumber++;
+//
+//            url = "https://4ab76f6325e7eb2:6ca56c1843e7c63e9d35@www.sendowl.com/api/v1_3/orders?per_page=50&page=" + pageNumber;
+//
+//            System.out.println(responseString.length());
+//
+//            Thread.sleep(1000);
         }
     }
 

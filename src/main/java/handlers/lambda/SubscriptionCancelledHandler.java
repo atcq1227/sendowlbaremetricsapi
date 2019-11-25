@@ -6,6 +6,7 @@ import baremetrics.Subscription;
 import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
 import sendowl.Order;
+import util.EmailUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class SubscriptionCancelledHandler {
                     .withName(order.getBuyerName());
 
             Subscription subscription = new Subscription()
-                    .withOID(plan.getOID() + "_" + customer.getOID())
+                    .withOID(plan.getOID() + "_" + customer.getOID() + "_" + order.getCompletedCheckoutAt())
                     .withCustomer(customer)
                     .withPlan(plan);
 
@@ -35,8 +36,10 @@ public class SubscriptionCancelledHandler {
             if(putSubscriptionCancelledResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Subscription cancelled with OID: " + subscription.getOID());
             } else {
+                String error = new BufferedReader(new InputStreamReader(putSubscriptionCancelledResponse.getEntity().getContent())).readLine();
+                new EmailUtil().sendEmail("Subscription cancelled put error", error);
                 System.out.println("Error cancelling subscription with OID: " + subscription.getOID());
-                System.out.println("Error: " + new BufferedReader(new InputStreamReader(putSubscriptionCancelledResponse.getEntity().getContent())).readLine());
+                System.out.println("Error: " + error);
             }
 
         } catch (IOException e) {

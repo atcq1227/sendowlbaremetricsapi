@@ -8,6 +8,7 @@ import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
 import sendowl.Order;
 import util.APIConstants;
+import util.EmailUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,8 +34,10 @@ public class ChargeHandler {
                 if(postCustomerResponse.getStatusLine().getStatusCode() == 200) {
                     System.out.println("Customer successfully posted! OID: " + customer.getOID());
                 } else {
+                    String error = new BufferedReader(new InputStreamReader(postCustomerResponse.getEntity().getContent())).readLine();
+                    new EmailUtil().sendEmail("Error posting customer", error);
                     System.out.println("Error posting customer with OID: " + customer.getOID());
-                    System.out.println("Error: " + new BufferedReader(new InputStreamReader(postCustomerResponse.getEntity().getContent())).readLine());
+                    System.out.println("Error: " + error);
                 }
             } else if (findCustomerResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Found existing customer with OID: " + customer.getOID());
@@ -52,8 +55,10 @@ public class ChargeHandler {
             if(postChargeResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Charge successfully posted with OID: " + charge.getOID());
             } else {
+                String error = new BufferedReader(new InputStreamReader(postChargeResponse.getEntity().getContent())).readLine();
+                new EmailUtil().sendEmail("Error posting charge", error);
                 System.out.println("Error posting charge with OID: " + charge.getOID());
-                System.out.println("Error: " + new BufferedReader(new InputStreamReader(postChargeResponse.getEntity().getContent())).readLine());
+                System.out.println("Error: " + error);
             }
 
         } catch (IOException e) {

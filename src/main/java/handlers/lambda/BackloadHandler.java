@@ -7,8 +7,15 @@ import com.codoid.products.exception.FilloException;
 import com.codoid.products.fillo.Connection;
 import com.codoid.products.fillo.Fillo;
 import com.codoid.products.fillo.Recordset;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import util.APIConstants;
 
 import java.io.BufferedReader;
@@ -31,21 +38,17 @@ public class BackloadHandler {
 
             Recordset rs = connection.executeQuery(query);
 
-            System.out.println(rs.getFieldNames());
-
             while(rs.next()) {
-                for(int i = 0; i < 23; i++) {
-                    rs.next();
-                }
-
                 if(rs.getField("State").equals("Subscription Active") || rs.getField("State").equals("Subscription Cancelling")) {
                     handleActiveSubscription(rs);
                 } else if(rs.getField("State").equals("Subscription Cancelled")) {
                     handleCancelledSubscription(rs);
                 }
+
+                Thread.sleep(1000);
             }
 
-        } catch (FilloException e) {
+        } catch (FilloException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -123,7 +126,7 @@ public class BackloadHandler {
             }
 
             Subscription subscription = new Subscription()
-                    .withOID(plan.getOID() + "_" + customer.getOID())
+                    .withOID(plan.getOID() + "_" + customer.getOID() + "_" + String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L))
                     .withCustomer(customer)
                     .withPlan(plan)
                     .withStartedAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L));
@@ -215,11 +218,11 @@ public class BackloadHandler {
             }
 
             Subscription subscription = new Subscription()
-                    .withOID(plan.getOID() + "_" + customer.getOID())
+                    .withOID(plan.getOID() + "_" + customer.getOID() + "_" + String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L))
                     .withCustomer(customer)
                     .withPlan(plan)
                     .withStartedAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Order date/time")).getTime() / 1000L))
-                    .withCancelledAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ssz").parse(rs.getField("Subscription Cancelled At")).getTime() / 1000L));
+                    .withCancelledAt(String.valueOf(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(rs.getField("Subscription Cancelled At")).getTime() / 1000L));
 
             HttpResponse postSubscriptionActiveResponse = baremetricsConnectionHandler.postBackloadSubscriptionCancelled(subscription);
 
@@ -231,6 +234,49 @@ public class BackloadHandler {
             }
 
         } catch(IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllSubscriptions() {
+        String subscriptions;
+
+        JsonArray ordersArray;
+
+        try {
+
+            do {
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpGet get = new HttpGet("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/subscriptions");
+
+                get.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+                subscriptions = new BufferedReader(new InputStreamReader(httpClient.execute(get).getEntity().getContent())).readLine();
+
+                ordersArray = new JsonParser().parse(subscriptions).getAsJsonObject().get("subscriptions").getAsJsonArray();
+
+                System.out.println(ordersArray.size());
+
+                ordersArray.forEach(order -> {
+                    String oid = order.getAsJsonObject().get("oid").getAsString();
+
+                    HttpClient lambdaHttpClient = new DefaultHttpClient();
+
+                    HttpDelete delete = new HttpDelete("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/subscriptions/" + oid);
+
+                    delete.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+                    try {
+                        System.out.println(lambdaHttpClient.execute(delete).getStatusLine());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            } while(ordersArray.size() > 0);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
