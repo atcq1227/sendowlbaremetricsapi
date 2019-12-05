@@ -18,4 +18,6 @@ public class APIConstants {
     public final static String SubscriptionActiveMessage = "subscription_active";
     public final  static String SubscriptionCancelledMessage = "subscription_cancelled";
     public final static String WebhookTestMessage = "initial";
+
+    public final static boolean ErrorEmailsOn = true;
 }

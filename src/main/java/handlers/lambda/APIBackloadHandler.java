@@ -56,8 +56,10 @@ public class APIBackloadHandler {
 
                     if(order.getState().equals("subscription_active")) {
                         handleActiveSubscription(order);
+                        Thread.sleep(10000);
                     } else if(order.getState().equals("subscription_cancelled")) {
                         handleCancelledSubscription(order);
+                        Thread.sleep(10000);
                     }
                 }
             } else {
@@ -67,8 +69,6 @@ public class APIBackloadHandler {
             pageNumber++;
 
             url = "https://4ab76f6325e7eb2:6ca56c1843e7c63e9d35@www.sendowl.com/api/v1_3/orders?per_page=50&page=" + pageNumber;
-
-            Thread.sleep(1000);
         }
     }
 
@@ -76,13 +76,32 @@ public class APIBackloadHandler {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 
-            String planName = new BufferedReader(new InputStreamReader(baremetricsConnectionHandler.getSpecificObjectHTTP("plans", order.getBackloadProductID()).getEntity().getContent())).readLine();
+            String planName = null;
+            String recurringPrice = null;
+            String interval = null;
+            String trialInterval = null;
+
+            if(order.getBackloadProductID().equals("7489")) {
+                planName = "Playin' it safe.";
+                recurringPrice = "1500";
+                interval = "month";
+            } else if(order.getBackloadProductID().equals("7491")) {
+                planName = "Goin' steady.";
+                recurringPrice = "13500";
+                interval = "year";
+            }
 
             Plan plan = new Plan()
-                    .withOID(order.getBackloadProductID());
+                    .withOID(order.getBackloadProductID())
+                    .withName(planName)
+                    .withRecurringPrice(recurringPrice)
+                    .withInterval(interval)
+                    .withCreated(order.getCreatedAt());
 
-            if(plan.getOID().equals("0")) {
+            if(plan.getOID().equals("8308")) {
                 plan.setName("Playin' It Safe. ($1 TRIAL DISCONTINUED)");
+                plan.setTrialDuration("1");
+                plan.setTrialDurationUnit("month");
             }
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
@@ -107,7 +126,8 @@ public class APIBackloadHandler {
                     .withActive("true")
                     .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                     .withEmail(order.getBuyerEmail())
-                    .withName(order.getBuyerName());
+                    .withName(order.getBuyerName())
+                    .withCreated(order.getCreatedAt());
 
             HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
 
@@ -127,7 +147,7 @@ public class APIBackloadHandler {
             }
 
             Subscription subscription = new Subscription()
-                    .withOID(plan.getOID() + "_" + customer.getOID())
+                    .withOID(plan.getOID() + "_" + customer.getOID() + "_" + order.getCreatedAt())
                     .withCustomer(customer)
                     .withPlan(plan)
                     .withStartedAt(order.getCreatedAt());
@@ -150,8 +170,35 @@ public class APIBackloadHandler {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 
+
+            String planName = null;
+            String recurringPrice = null;
+            String interval = null;
+            String trialInterval = null;
+
+            if(order.getBackloadProductID().equals("7489")) {
+                planName = "Playin' it safe.";
+                recurringPrice = "1500";
+                interval = "month";
+            } else if(order.getBackloadProductID().equals("7491")) {
+                planName = "Goin' steady.";
+                recurringPrice = "13500";
+                interval = "year";
+            }
+
             Plan plan = new Plan()
-                    .withOID(order.getBackloadProductID());
+                    .withOID(order.getBackloadProductID())
+                    .withName(planName)
+                    .withRecurringPrice(recurringPrice)
+                    .withInterval(interval)
+                    .withCreated(order.getCreatedAt());
+
+            if(plan.getOID().equals("8308")) {
+                plan.setName("Playin' It Safe. ($1 TRIAL DISCONTINUED)");
+                plan.setTrialDuration("1");
+                plan.setTrialDurationUnit("month");
+            }
+
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
 

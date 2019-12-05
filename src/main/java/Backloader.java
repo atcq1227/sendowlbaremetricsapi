@@ -25,8 +25,6 @@ public class Backloader {
     public static void main(String[] args) throws Exception {
         new BackloadHandler().deleteAllSubscriptions();
         new APIBackloadHandler().handle();
-
-        //problemFinder();
     }
 
     private static void problemFinder() throws IOException, InterruptedException {
@@ -73,7 +71,7 @@ public class Backloader {
 
             url = "https://4ab76f6325e7eb2:6ca56c1843e7c63e9d35@www.sendowl.com/api/v1_3/orders?per_page=50&page=" + pageNumber;
 
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
     }
 }
