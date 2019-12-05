@@ -5,7 +5,7 @@ import baremetrics.Plan;
 import baremetrics.Subscription;
 import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
-import sendowl.Order;
+import sendowl.PresentOrder;
 import util.APIConstants;
 import util.EmailUtil;
 
@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 
 
 public class SubscriptionActiveHandler {
-    public String handle(Order order) {
+    public String handle(PresentOrder order) {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 

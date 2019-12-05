@@ -2,11 +2,9 @@ package handlers.lambda;
 
 import baremetrics.Charge;
 import baremetrics.Customer;
-import baremetrics.Plan;
-import baremetrics.Subscription;
 import handlers.connection.BaremetricsConnectionHandler;
 import org.apache.http.HttpResponse;
-import sendowl.Order;
+import sendowl.PresentOrder;
 import util.APIConstants;
 import util.EmailUtil;
 
@@ -15,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ChargeHandler {
-    public String handle(Order order) {
+    public String handle(PresentOrder order) {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 

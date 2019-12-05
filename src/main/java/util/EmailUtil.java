@@ -9,7 +9,7 @@ import java.util.Properties;
 public class EmailUtil {
     public static void sendEmail(String subject, String body) {
 
-        final String username = "atcq1227@gmail.com";
+        final String username = "mshawapierrors@gmail.com";
         final String password = "theharvest46";
 
         Properties prop = new Properties();
