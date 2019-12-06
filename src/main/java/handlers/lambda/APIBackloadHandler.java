@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import handlers.connection.BaremetricsConnectionHandler;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -26,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class APIBackloadHandler {
+
     public void handle() throws IOException, InterruptedException {
         int pageNumber = 0;
 
@@ -47,19 +49,23 @@ public class APIBackloadHandler {
 
             String responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
 
+            if(responseString.equals("<HEAD><TITLE>Authorization Required</TITLE></HEAD>")) {
+                Thread.sleep(120000);
+                continue;
+            }
+
+            System.out.println(responseString);
+
             JsonArray array = new JsonParser().parse(responseString).getAsJsonArray();
 
             if(array.size() > 0) {
                 for (JsonElement element : array) {
-                    System.out.println(element.getAsJsonObject().get("order"));
                     PastOrder order = new PastOrder(element.getAsJsonObject().get("order").toString());
 
                     if(order.getState().equals("subscription_active")) {
                         handleActiveSubscription(order);
-                        Thread.sleep(10000);
                     } else if(order.getState().equals("subscription_cancelled")) {
                         handleCancelledSubscription(order);
-                        Thread.sleep(10000);
                     }
                 }
             } else {
