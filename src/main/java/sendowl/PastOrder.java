@@ -43,6 +43,11 @@ public class PastOrder extends Order {
                 .get("name").getAsString();
     }
 
+    public String getSettledGross() {
+        return JsonUtil.searchableBody(this.orderBody).getAsJsonObject()
+                .get("settled_gross").getAsString();
+    }
+
     public String getPrice() {
         return JsonUtil.searchableBody(this.orderBody).getAsJsonObject()
                 .get("cart").getAsJsonObject()
@@ -103,6 +108,12 @@ public class PastOrder extends Order {
                 .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
                 .get("product").getAsJsonObject()
                 .get("id").getAsString();
+    }
+
+    public String getCompletedCheckoutAt() {
+        return JsonUtil.searchableBody(this.orderBody).getAsJsonObject()
+                .get("cart").getAsJsonObject()
+                .get("completed_checkout_at").getAsString();
     }
 
     public String getBackloadProductID() {

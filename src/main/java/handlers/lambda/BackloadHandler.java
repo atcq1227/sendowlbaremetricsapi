@@ -280,4 +280,47 @@ public class BackloadHandler {
             e.printStackTrace();
         }
     }
+
+    public void deleteAllCharges() {
+        String subscriptions;
+
+        JsonArray ordersArray;
+
+        try {
+
+            do {
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpGet get = new HttpGet("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges");
+
+                get.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+                subscriptions = new BufferedReader(new InputStreamReader(httpClient.execute(get).getEntity().getContent())).readLine();
+
+                ordersArray = new JsonParser().parse(subscriptions).getAsJsonObject().get("charges").getAsJsonArray();
+
+                System.out.println(ordersArray.size());
+
+                ordersArray.forEach(order -> {
+                    String oid = order.getAsJsonObject().get("oid").getAsString().replace(" ", "%20");
+
+                    HttpClient lambdaHttpClient = new DefaultHttpClient();
+
+                    HttpDelete delete = new HttpDelete("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges/" + oid);
+
+                    delete.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+                    try {
+                        System.out.println(lambdaHttpClient.execute(delete).getStatusLine());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            } while(ordersArray.size() > 0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -62,10 +62,16 @@ public class APIBackloadHandler {
                 for (JsonElement element : array) {
                     PastOrder order = new PastOrder(element.getAsJsonObject().get("order").toString());
 
-                    if(order.getState().equals("subscription_active")) {
-                        handleActiveSubscription(order);
-                    } else if(order.getState().equals("subscription_cancelled")) {
-                        handleCancelledSubscription(order);
+//                    if(order.getState().equals("subscription_active")) {
+//                        handleActiveSubscription(order);
+//                    } else if(order.getState().equals("subscription_cancelled")) {
+//                        handleCancelledSubscription(order);
+//                    } else if(order.getState().equals("complete")) {
+//                        new ChargeHandler().handle(order);
+//                    }
+
+                    if(order.getState().equals("complete")) {
+                        new ChargeHandler().handle(order);
                     }
                 }
             } else {

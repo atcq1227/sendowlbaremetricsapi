@@ -36,6 +36,9 @@ public abstract class Order {
 
     public abstract String getProductID();
 
-    public abstract String getBackloadProductID(); 
-    
+    public abstract String getBackloadProductID();
+
+    public abstract String getCompletedCheckoutAt();
+
+    public abstract String getSettledGross();
 }

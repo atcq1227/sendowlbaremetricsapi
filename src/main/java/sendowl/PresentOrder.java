@@ -99,4 +99,9 @@ public class PresentOrder extends Order {
         return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
                 .get("subscription_id").getAsString();
     }
+
+    public String getSettledGross() {
+        return JsonUtil.searchableBody(this.orderBody).get("order").getAsJsonObject()
+                .get("settled_gross").getAsString();
+    }
 }
