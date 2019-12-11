@@ -302,6 +302,7 @@ public class BackloadHandler {
                 System.out.println(ordersArray.size());
 
                 ordersArray.forEach(order -> {
+                    System.out.println(order.getAsJsonObject().get("oid").getAsString());
                     String oid = order.getAsJsonObject().get("oid").getAsString().replace(" ", "%20");
 
                     HttpClient lambdaHttpClient = new DefaultHttpClient();

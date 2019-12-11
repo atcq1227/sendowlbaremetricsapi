@@ -5,7 +5,7 @@ public class Charge {
     String sourceID;
     String source;
     String status;
-    int created;
+    String created;
     Customer customer;
     String subscription;
     String amount;
@@ -44,7 +44,7 @@ public class Charge {
         return status;
     }
 
-    public int getCreated() {
+    public String getCreated() {
         return created;
     }
 
@@ -100,7 +100,7 @@ public class Charge {
         return this;
     }
 
-    public Charge withCreated(int created) {
+    public Charge withCreated(String created) {
         this.created = created;
 
         return this;

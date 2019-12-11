@@ -43,10 +43,11 @@ public class ChargeHandler {
             }
 
             Charge charge = new Charge()
-                    .withOID(order.getCompletedCheckoutAt() + "_" + order.getBuyerName().replace(" ", "_"))
+                    .withOID(System.currentTimeMillis() / 1000L + "_" + order.getBuyerName().replace(" ", "_"))
                     .withAmount(order.getSettledGross().replace(".", ""))
                     .withCurrency(order.getCurrency())
                     .withCurrency(order.getCurrency())
+                    .withCreated(order.getCompletedCheckoutAt())
                     .withCustomer(customer);
 
             HttpResponse postChargeResponse = baremetricsConnectionHandler.postCharge(charge);
@@ -55,9 +56,13 @@ public class ChargeHandler {
                 System.out.println("Charge successfully posted with OID: " + charge.getOID());
             } else {
                 String error = new BufferedReader(new InputStreamReader(postChargeResponse.getEntity().getContent())).readLine();
-                new EmailUtil().sendEmail("Error posting charge", error);
-                System.out.println("Error posting charge with OID: " + charge.getOID());
-                System.out.println("Error: " + error);
+                if(error.contains("<HEAD><TITLE>Authorization Required</TITLE></HEAD>") || error.contains("<HEAD><TITLE>Authentication Required</TITLE></HEAD>")) {
+                    handle(order);
+                } else {
+                    new EmailUtil().sendEmail("Error posting charge", error);
+                    System.out.println("Error posting charge with OID: " + charge.getOID());
+                    System.out.println("Error: " + error);
+                }
             }
 
         } catch (IOException e) {

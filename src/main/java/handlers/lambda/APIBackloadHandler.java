@@ -49,7 +49,7 @@ public class APIBackloadHandler {
 
             String responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
 
-            if(responseString.equals("<HEAD><TITLE>Authorization Required</TITLE></HEAD>")) {
+            if(responseString.contains("<HEAD><TITLE>Authorization Required</TITLE></HEAD>") || responseString.contains("<HEAD><TITLE>Authentication Required</TITLE></HEAD>")) {
                 Thread.sleep(120000);
                 continue;
             }
@@ -62,17 +62,17 @@ public class APIBackloadHandler {
                 for (JsonElement element : array) {
                     PastOrder order = new PastOrder(element.getAsJsonObject().get("order").toString());
 
-//                    if(order.getState().equals("subscription_active")) {
-//                        handleActiveSubscription(order);
-//                    } else if(order.getState().equals("subscription_cancelled")) {
-//                        handleCancelledSubscription(order);
-//                    } else if(order.getState().equals("complete")) {
-//                        new ChargeHandler().handle(order);
-//                    }
-
-                    if(order.getState().equals("complete")) {
+                    if(order.getState().equals("subscription_active")) {
+                        handleActiveSubscription(order);
+                    } else if(order.getState().equals("subscription_cancelled")) {
+                        handleCancelledSubscription(order);
+                    } else if(order.getState().equals("complete")) {
                         new ChargeHandler().handle(order);
                     }
+//
+//                    if(order.getState().equals("complete")) {
+//                        new ChargeHandler().handle(order);
+//                    }
                 }
             } else {
                 morePages = false;

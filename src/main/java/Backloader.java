@@ -24,8 +24,9 @@ import java.util.Date;
 public class Backloader {
     public static void main(String[] args) throws Exception {
         new BackloadHandler().deleteAllSubscriptions();
-        new BackloadHandler().deleteAllCharges();
-        new APIBackloadHandler().handle();
+        //new BackloadHandler().deleteAllCharges();
+        //new APIBackloadHandler().handle();
+        //problemFinder();
     }
 
     private static void problemFinder() throws IOException, InterruptedException {
@@ -50,6 +51,8 @@ public class Backloader {
             HttpResponse response = httpClient.execute(get);
 
             String responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
+
+            System.out.println(responseString);
 
             JsonArray array = new JsonParser().parse(responseString).getAsJsonArray();
 

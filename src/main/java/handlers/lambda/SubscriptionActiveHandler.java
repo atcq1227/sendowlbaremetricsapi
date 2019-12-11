@@ -85,9 +85,13 @@ public class SubscriptionActiveHandler {
                 System.out.println("Subscription successfully posted! OID: " + subscription.getOID());
             } else {
                 String error = new BufferedReader(new InputStreamReader(postSubscriptionActiveResponse.getEntity().getContent())).readLine();
-                new EmailUtil().sendEmail("Subscription post error", error);
-                System.out.println("Error posting subscription with OID: " + subscription.getOID());
-                System.out.println("Error: " + error);
+                if(error.contains("<HEAD><TITLE>Authorization Required</TITLE></HEAD>") || error.contains("<HEAD><TITLE>Authentication Required</TITLE></HEAD>")) {
+                    handle(order);
+                } else {
+                    new EmailUtil().sendEmail("Subscription post error", error);
+                    System.out.println("Error posting subscription with OID: " + subscription.getOID());
+                    System.out.println("Error: " + error);
+                }
             }
 
         } catch (IOException | ParseException e) {

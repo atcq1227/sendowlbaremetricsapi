@@ -37,11 +37,14 @@ public class SubscriptionCancelledHandler {
                 System.out.println("Subscription cancelled with OID: " + subscription.getOID());
             } else {
                 String error = new BufferedReader(new InputStreamReader(putSubscriptionCancelledResponse.getEntity().getContent())).readLine();
-                new EmailUtil().sendEmail("Subscription cancelled put error", error);
-                System.out.println("Error cancelling subscription with OID: " + subscription.getOID());
-                System.out.println("Error: " + error);
+                if(error.contains("<HEAD><TITLE>Authorization Required</TITLE></HEAD>") || error.contains("<HEAD><TITLE>Authentication Required</TITLE></HEAD>")) {
+                    handle(order);
+                } else {
+                    new EmailUtil().sendEmail("Subscription cancelled put error", error);
+                    System.out.println("Error cancelling subscription with OID: " + subscription.getOID());
+                    System.out.println("Error: " + error);
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

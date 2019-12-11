@@ -166,6 +166,8 @@ public class BaremetricsConnectionHandler {
         urlParameters.add(new BasicNameValuePair("amount", charge.getAmount()));
         urlParameters.add(new BasicNameValuePair("currency", charge.getCurrency()));
         urlParameters.add(new BasicNameValuePair("customer_oid", charge.getCustomer().getOID()));
+        urlParameters.add(new BasicNameValuePair("created", charge.getCreated()));
+
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
