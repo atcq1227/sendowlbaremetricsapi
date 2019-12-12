@@ -6,6 +6,7 @@ public class APIConstants {
 
     public final static String SendOwlProducts = "/api/v1/products";
     public final static String SendOwlOrders = "/api/v1_3/orders";
+    public final static String SendOwlSubscriptions = "/api/v1_3/subscriptions";
 
     public final static String BaremetricsSubscriptions = "/subscriptions";
     public final static String BaremetricsAPIBaseURL = baremetricsLiveBaseURL;

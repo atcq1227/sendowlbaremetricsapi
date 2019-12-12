@@ -2,6 +2,7 @@ package handlers.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import sendowl.Order;
 import sendowl.PresentOrder;
 import util.APIConstants;
 import util.EmailUtil;

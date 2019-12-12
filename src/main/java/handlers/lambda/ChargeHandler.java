@@ -43,7 +43,7 @@ public class ChargeHandler {
             }
 
             Charge charge = new Charge()
-                    .withOID(System.currentTimeMillis() / 1000L + "_" + order.getBuyerName().replace(" ", "_"))
+                    .withOID(System.currentTimeMillis() / 1000L + "_" + order.getBuyerEmail())
                     .withAmount(order.getSettledGross().replace(".", ""))
                     .withCurrency(order.getCurrency())
                     .withCurrency(order.getCurrency())

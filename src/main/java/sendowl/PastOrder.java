@@ -104,10 +104,7 @@ public class PastOrder extends Order {
 
     public String getProductID() {
         return JsonUtil.searchableBody(this.orderBody).getAsJsonObject()
-                .get("cart").getAsJsonObject()
-                .get("cart_items").getAsJsonArray().get(0).getAsJsonObject()
-                .get("product").getAsJsonObject()
-                .get("id").getAsString();
+                .get("subscription_id").getAsString();
     }
 
     public String getCompletedCheckoutAt() {

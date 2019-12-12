@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import handlers.connection.BaremetricsConnectionHandler;
+import handlers.connection.SendOwlConnectionHandler;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,6 +20,7 @@ import sendowl.Order;
 import sendowl.PresentOrder;
 import sendowl.PastOrder;
 import util.APIConstants;
+import util.JsonUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,11 +51,6 @@ public class APIBackloadHandler {
 
             String responseString = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
 
-            if(responseString.contains("<HEAD><TITLE>Authorization Required</TITLE></HEAD>") || responseString.contains("<HEAD><TITLE>Authentication Required</TITLE></HEAD>")) {
-                Thread.sleep(120000);
-                continue;
-            }
-
             System.out.println(responseString);
 
             JsonArray array = new JsonParser().parse(responseString).getAsJsonArray();
@@ -66,9 +63,10 @@ public class APIBackloadHandler {
                         handleActiveSubscription(order);
                     } else if(order.getState().equals("subscription_cancelled")) {
                         handleCancelledSubscription(order);
-                    } else if(order.getState().equals("complete")) {
-                        new ChargeHandler().handle(order);
                     }
+//                    } else if(order.getState().equals("complete")) {
+//                        new ChargeHandler().handle(order);
+//                    }
 //
 //                    if(order.getState().equals("complete")) {
 //                        new ChargeHandler().handle(order);
@@ -88,33 +86,17 @@ public class APIBackloadHandler {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 
-            String planName = null;
-            String recurringPrice = null;
-            String interval = null;
-            String trialInterval = null;
+            SendOwlConnectionHandler sendOwlConnectionHandler = new SendOwlConnectionHandler();
 
-            if(order.getBackloadProductID().equals("7489")) {
-                planName = "Playin' it safe.";
-                recurringPrice = "1500";
-                interval = "month";
-            } else if(order.getBackloadProductID().equals("7491")) {
-                planName = "Goin' steady.";
-                recurringPrice = "13500";
-                interval = "year";
-            }
+            String specificPlan = sendOwlConnectionHandler.getSpecificSubscriptionJSON(order.getBackloadProductID());
 
             Plan plan = new Plan()
                     .withOID(order.getBackloadProductID())
-                    .withName(planName)
-                    .withRecurringPrice(recurringPrice)
-                    .withInterval(interval)
+                    .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString())
+                    .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString().replace(".", ""))
+                    .withInterval(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("frequency_interval").getAsString())
+                    .withCurrency(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("currency_code").getAsString())
                     .withCreated(order.getCreatedAt());
-
-            if(plan.getOID().equals("8308")) {
-                plan.setName("Playin' It Safe. ($1 TRIAL DISCONTINUED)");
-                plan.setTrialDuration("1");
-                plan.setTrialDurationUnit("month");
-            }
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
 
@@ -182,34 +164,17 @@ public class APIBackloadHandler {
         try {
             BaremetricsConnectionHandler baremetricsConnectionHandler = new BaremetricsConnectionHandler();
 
+            SendOwlConnectionHandler sendOwlConnectionHandler = new SendOwlConnectionHandler();
 
-            String planName = null;
-            String recurringPrice = null;
-            String interval = null;
-            String trialInterval = null;
-
-            if(order.getBackloadProductID().equals("7489")) {
-                planName = "Playin' it safe.";
-                recurringPrice = "1500";
-                interval = "month";
-            } else if(order.getBackloadProductID().equals("7491")) {
-                planName = "Goin' steady.";
-                recurringPrice = "13500";
-                interval = "year";
-            }
+            String specificPlan = sendOwlConnectionHandler.getSpecificSubscriptionJSON(order.getBackloadProductID());
 
             Plan plan = new Plan()
                     .withOID(order.getBackloadProductID())
-                    .withName(planName)
-                    .withRecurringPrice(recurringPrice)
-                    .withInterval(interval)
+                    .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString())
+                    .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString().replace(".", ""))
+                    .withInterval(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("frequency_interval").getAsString())
+                    .withCurrency(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("currency_code").getAsString())
                     .withCreated(order.getCreatedAt());
-
-            if(plan.getOID().equals("8308")) {
-                plan.setName("Playin' It Safe. ($1 TRIAL DISCONTINUED)");
-                plan.setTrialDuration("1");
-                plan.setTrialDurationUnit("month");
-            }
 
 
             HttpResponse findPlanResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsPlans, plan.getOID());
