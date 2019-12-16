@@ -374,10 +374,12 @@ public class BackloadHandler {
 
         try {
 
+            int pageNumber = 68;
+
             do {
                 HttpClient httpClient = new DefaultHttpClient();
 
-                HttpGet get = new HttpGet("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges");
+                HttpGet get = new HttpGet("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges?per_page=50&page=" + pageNumber);
 
                 get.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
 
@@ -388,22 +390,27 @@ public class BackloadHandler {
                 System.out.println(ordersArray.size());
 
                 ordersArray.forEach(order -> {
-                    String oid = order.getAsJsonObject().get("created").getAsString() + "_" + order.getAsJsonObject().get("customer").getAsJsonObject().get("email").getAsString();
+                    String oid = order.getAsJsonObject().get("oid").getAsString();
 
-                    System.out.println(oid);
+                    if(!oid.contains(" ")) {
 
-                    HttpClient lambdaHttpClient = new DefaultHttpClient();
+                        System.out.println(oid);
 
-                    HttpDelete delete = new HttpDelete("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges/" + oid);
+                        HttpClient lambdaHttpClient = new DefaultHttpClient();
 
-                    delete.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+                        HttpDelete delete = new HttpDelete("https://api.baremetrics.com/v1/5684c900-a29c-4ca9-8ac4-f85b68288011/charges/" + oid);
 
-                    try {
-                        System.out.println(lambdaHttpClient.execute(delete).getStatusLine());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        delete.addHeader("Authorization", APIConstants.BaremetricsAPIKey);
+
+                        try {
+                            System.out.println(lambdaHttpClient.execute(delete).getStatusLine());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+
+                pageNumber--;
 
             } while(ordersArray.size() > 0);
 
