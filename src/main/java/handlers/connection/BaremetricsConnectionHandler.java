@@ -67,6 +67,7 @@ public class BaremetricsConnectionHandler {
         urlParameters.add(new BasicNameValuePair("currency", plan.getCurrency()));
         urlParameters.add(new BasicNameValuePair("amount", plan.getRecurringPrice()));
         urlParameters.add(new BasicNameValuePair("interval_count", "1"));
+        urlParameters.add(new BasicNameValuePair("interval", plan.getInterval()));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 

@@ -303,6 +303,7 @@ public class BackloadHandler {
 
                 ordersArray.forEach(order -> {
                     String oid = order.getAsJsonObject().get("oid").getAsString();
+                    System.out.println("Plan OID: " + oid);
 
                     HttpClient lambdaHttpClient = new DefaultHttpClient();
 

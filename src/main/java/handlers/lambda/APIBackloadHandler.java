@@ -110,7 +110,7 @@ public class APIBackloadHandler {
 
                 Plan plan = new Plan()
                         .withOID(order.getBackloadProductID())
-                        .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString())
+                        .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString().replaceAll("[^A-Za-z0-9]", ""))
                         .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString().replace(".", ""))
                         .withInterval(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("frequency_interval").getAsString())
                         .withCurrency(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("currency_code").getAsString())

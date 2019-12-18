@@ -74,7 +74,7 @@ public class PastOrder extends Order {
 
     public String getBuyerName() {
         return JsonUtil.searchableBody(this.orderBody).getAsJsonObject()
-                .get("buyer_name").getAsString();
+                .get("buyer_name").getAsString().replaceAll("[^A-Za-z0-9]", "");
     }
 
     public String getBuyerEmail() {

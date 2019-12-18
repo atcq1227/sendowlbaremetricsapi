@@ -26,8 +26,8 @@ public class Backloader {
 //        new BackloadHandler().deleteAllSubscriptions();
 //        new BackloadHandler().deleteAllCustomers();
 //        new BackloadHandler().deleteAllPlans();
-        new BackloadHandler().deleteAllCharges();
-//        new APIBackloadHandler().handle(0);
+//        new BackloadHandler().deleteAllCharges();
+        new APIBackloadHandler().handle(0);
         //problemFinder();
     }
 
