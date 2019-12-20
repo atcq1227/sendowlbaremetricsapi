@@ -138,7 +138,7 @@ public class APIBackloadHandler {
                         .withActive("true")
                         .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                         .withEmail(order.getBuyerEmail())
-                        .withName(order.getBuyerName().replaceAll("[^A-Za-z0-9]", ""))
+                        .withName(order.getBuyerName())
                         .withCreated(order.getCreatedAt());
 
                 HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
@@ -236,7 +236,7 @@ public class APIBackloadHandler {
                         .withActive("true")
                         .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                         .withEmail(order.getBuyerEmail())
-                        .withName(order.getBuyerName().replaceAll("[^A-Za-z0-9]", ""))
+                        .withName(order.getBuyerName())
                         .withCreated(order.getCreatedAt());
 
                 HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());

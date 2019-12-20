@@ -31,7 +31,7 @@ public class Backloader {
 //        new BackloadHandler().deleteAllPlans();
 //        System.out.println("deleting charges");
 //        new BackloadHandler().deleteAllCharges();
-//        System.out.println("handling");
+        System.out.println("handling");
         new APIBackloadHandler().handle(0);
         //problemFinder();
     }
