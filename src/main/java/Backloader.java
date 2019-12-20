@@ -23,10 +23,15 @@ import java.util.Date;
 
 public class Backloader {
     public static void main(String[] args) throws Exception {
+//        System.out.println("deleting subscriptions");
 //        new BackloadHandler().deleteAllSubscriptions();
+//        System.out.println("deleting customers");
 //        new BackloadHandler().deleteAllCustomers();
+//        System.out.println("deleting plans");
 //        new BackloadHandler().deleteAllPlans();
+//        System.out.println("deleting charges");
 //        new BackloadHandler().deleteAllCharges();
+//        System.out.println("handling");
         new APIBackloadHandler().handle(0);
         //problemFinder();
     }

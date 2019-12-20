@@ -110,7 +110,7 @@ public class APIBackloadHandler {
 
                 Plan plan = new Plan()
                         .withOID(order.getBackloadProductID())
-                        .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString().replaceAll("[^A-Za-z0-9]", ""))
+                        .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString())
                         .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString().replace(".", ""))
                         .withInterval(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("frequency_interval").getAsString())
                         .withCurrency(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("currency_code").getAsString())
@@ -138,7 +138,7 @@ public class APIBackloadHandler {
                         .withActive("true")
                         .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                         .withEmail(order.getBuyerEmail())
-                        .withName(order.getBuyerName())
+                        .withName(order.getBuyerName().replaceAll("[^A-Za-z0-9]", ""))
                         .withCreated(order.getCreatedAt());
 
                 HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
@@ -208,7 +208,7 @@ public class APIBackloadHandler {
                 Plan plan = new Plan()
                         .withOID(order.getBackloadProductID())
                         .withName(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("name").getAsString())
-                        .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString().replace(".", ""))
+                        .withRecurringPrice(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("recurring_price").getAsString())
                         .withInterval(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("frequency_interval").getAsString())
                         .withCurrency(JsonUtil.searchableBody(specificPlan).get("subscription").getAsJsonObject().get("currency_code").getAsString())
                         .withCreated(order.getCreatedAt());
@@ -236,7 +236,7 @@ public class APIBackloadHandler {
                         .withActive("true")
                         .withOID(order.getBuyerEmail().replace("@", "_").replace(".com", ""))
                         .withEmail(order.getBuyerEmail())
-                        .withName(order.getBuyerName())
+                        .withName(order.getBuyerName().replaceAll("[^A-Za-z0-9]", ""))
                         .withCreated(order.getCreatedAt());
 
                 HttpResponse findCustomerResponse = baremetricsConnectionHandler.getSpecificObjectHTTP(APIConstants.BaremetricsCustomers, customer.getOID());
